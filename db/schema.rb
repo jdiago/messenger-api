@@ -16,9 +16,9 @@ ActiveRecord::Schema.define(version: 2021_02_16_020951) do
   enable_extension "plpgsql"
 
   create_table "messages", force: :cascade do |t|
-    t.text "sender"
-    t.text "receiver"
-    t.text "content"
+    t.text "sender", null: false
+    t.text "receiver", null: false
+    t.text "content", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
