@@ -11,6 +11,7 @@ After cloning the project and installing the dependencies, depending on how your
 * run `bin/rails db:create`
 * run `bin/rails db:schema:load`
 * run `bin/rails db:seed`
+* run `bin/rails s` to run the server
 
 ## Usage
 There are 2 endpoints. One for creating messages and one for getting messages. Assuming the server is running on `localhost:3000`:
