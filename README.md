@@ -1,24 +1,103 @@
 # README
+## Dependencies
+* Ruby 2.7.2
+* Rails 6.1.2.1
+* Postgresql
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Configuration
+After cloning the project and installing the dependencies, depending on how your postgres is installed `config/database.yml` may need modification. The supplied `database.yml` works for postgres installs that do not require username/password (like postgres.app or homebrew).
 
-Things you may want to cover:
+* run `bundle install`
+* run `bin/rails db:create`
+* run `bin/rails db:schema:load`
+* run `bin/rails db:seed`
 
-* Ruby version
+## Usage
+There are 2 endpoints. One for creating messages and one for getting messages. Assuming the server is running on `localhost:3000`:
 
-* System dependencies
+### Create message
+Here is a sample curl command with all the required params:
+```
+curl --request POST \
+  --url http://localhost:3000/messages.json \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "message": {
+    "sender": "alice",
+    "receiver": "bob",
+    "content": "hello"
+  }
+}'
+```
 
-* Configuration
+returns:
+```
+{"sender":"alice","receiver":"bob","content":"hello","created_at":"..."}
+```
 
-* Database creation
+If required params are missing:
+```
+curl --request POST \
+  --url http://localhost:3000/messages.json \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "message": {
+    "sender": "b"
+  }
+}'
+```
 
-* Database initialization
+returns:
+```
+{"receiver":["can't be blank"],"content":["can't be blank"]}
+```
 
-* How to run the test suite
+### Get messages
+Here is a sample curl command with all the required params:
+```
+curl --request GET \
+  --url 'http://localhost:3000/messages.json?receiver=bob'
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+returns:
+```
+[
+  {
+    "sender": "alice",
+    "receiver": "bob",
+    "content": "hello",
+    "created_at": "..."
+  },
+  ...
+]
+```
 
-* Deployment instructions
+If required params are missing:
+```
+curl --request GET \
+  --url 'http://localhost:3000/messages.json?sender=alice'
+```
 
-* ...
+returns:
+```
+{"receiver":"can't be blank"}
+```
+
+#### Optional params
+The `sender` param can be specified to get messages from a specific sender.
+```
+curl --request GET \
+  --url 'http://localhost:3000/messages.json?receiver=bob&sender=alice'
+```
+
+The `last_30` param can be set to `t` to fetch all messages within the last 30 days. By default, the last 100 messages to the receiver are fetched.
+```
+curl --request GET \
+  --url 'http://localhost:3000/messages.json?receiver=bob&last_30=t'
+
+curl --request GET \
+  --url 'http://localhost:3000/messages.json?receiver=bob&sender=alice&last_30=t'
+```
+
+## Tests
+The test suit can be found in the `test/` directory and can be run with `bin/rails test`
