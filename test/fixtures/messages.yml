@@ -1,11 +1,18 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  sender: MyText
-  receiver: MyText
-  content: MyText
+  sender: bob
+  receiver: alice
+  content: hello
 
 two:
-  sender: MyText
-  receiver: MyText
-  content: MyText
+  sender: alice
+  receiver: bob
+  content: bye
+
+<% 150.times do |n| %>
+message_<%= n %>:
+  sender: bob
+  receiver: alice
+  content: <%= "message #{n}" %>
+<% end %>
